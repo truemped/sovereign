@@ -1,42 +1,16 @@
-- name: Install Dovecot and related packages
-  apt: pkg={{ item }} state=installed
+- name: Install Dovecot
+  openbsd_pkg: name={{ item }} state=installed
   with_items:
-    - dovecot-core
-    - dovecot-imapd
-    - dovecot-lmtpd
-    - dovecot-managesieved
-    - dovecot-pgsql
-    - dovecot-pop3d
-    - postgresql-9.1
-  when: ansible_distribution_release != 'trusty'
+    - dovecot
+    - dovecot-pigeonhole
 
-- name: Install Dovecot and related packages for Ubuntu trusty
-  apt: pkg={{ item }} state=installed
-  with_items:
-    - dovecot-core
-    - dovecot-imapd
-    - dovecot-lmtpd
-    - dovecot-managesieved
-    - dovecot-pgsql
-    - dovecot-pop3d
-    - postgresql-9.3
-  when: ansible_distribution_release == 'trusty'
+- name: Ensure dovecot resource limits
+  sudo: yes
+  lineinfile: "dest=/etc/login.conf backup=yes line='dovecot: :openfiles-cur=512: :openfiles-max=2048: :tc=daemon:' regexp='^dovecot: :openfiles-cur=512: :openfiles-max=2048: :tc=daemon:$' state=present create=True insertafter=EOF"
+  notify:
+      - Rerun loginconf database
 
-- name: Create vmail group
-  group: name=vmail state=present gid=5000
-
-- name: Create vmail user
-  user: name=vmail group=vmail state=present uid=5000 home=/decrypted shell=/usr/sbin/nologin
-
-- name: Ensure mail domain directories are in place
-  file: state=directory path=/decrypted/{{ item.name }} owner=vmail group=dovecot mode=770
-  with_items: mail_virtual_domains
-
-- name: Ensure mail directories are in place
-  file: state=directory path=/decrypted/{{ item.domain }}/{{ item.account }} owner=vmail group=dovecot
-  with_items: mail_virtual_users
-
-- name: Copy dovecot.conf into place
+- name: Dovecot config
   copy: src=etc_dovecot_dovecot.conf dest=/etc/dovecot/dovecot.conf
 
 - name: Copy additional Dovecot configuration files in place
@@ -46,24 +20,27 @@
     - 10-mail.conf
     - 10-master.conf
     - 10-ssl.conf
-    - auth-sql.conf.ext
+    - 20-imap.conf
+    - 20-lmtp.conf
+    - 90-plugin.conf
   notify: restart dovecot
 
-- name: Template 15-lda.conf
-  template: src=etc_dovecot_conf.d_15-lda.conf.j2 dest=/etc/dovecot/conf.d/15-lda.conf
-  notify: restart dovecot
 
-- name: Template dovecot-sql.conf.ext
-  template: src=etc_dovecot_dovecot-sql.conf.ext.j2 dest=/etc/dovecot/dovecot-sql.conf.ext
-  notify: restart dovecot
-
-- name: Ensure correct permissions on Dovecot config directory
-  file: state=directory path=/etc/dovecot
-          group=dovecot owner=vmail mode=770 recurse=yes
-  notify: restart dovecot
-
-- name: Set firewall rules for dovecot
-  ufw: rule=allow port={{ item }} proto=tcp
-  with_items:
-    - imaps
-    - pop3s
+#- name: Template 15-lda.conf
+#  template: src=etc_dovecot_conf.d_15-lda.conf.j2 dest=/etc/dovecot/conf.d/15-lda.conf
+#  notify: restart dovecot
+#
+#- name: Template dovecot-sql.conf.ext
+#  template: src=etc_dovecot_dovecot-sql.conf.ext.j2 dest=/etc/dovecot/dovecot-sql.conf.ext
+#  notify: restart dovecot
+#
+#- name: Ensure correct permissions on Dovecot config directory
+#  file: state=directory path=/etc/dovecot
+#          group=dovecot owner=vmail mode=770 recurse=yes
+#  notify: restart dovecot
+#
+#- name: Set firewall rules for dovecot
+#  ufw: rule=allow port={{ item }} proto=tcp
+#  with_items:
+#    - imaps
+#    - pop3s

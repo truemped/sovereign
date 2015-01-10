@@ -1,0 +1,18 @@
+---
+
+- name: Upload smtpd.conf
+  template: src=etc_mail_smtpd.conf.j2 dest=/etc/mail/smtpd.conf owner=root group=wheel mode=0644
+
+- name: Upload domains
+  sudo: yes
+  template: src=etc_mail_domains.j2 dest=/etc/mail/domains owner=root group=wheel mode=0644
+
+- name: Upload vusers
+  sudo: yes
+  template: src=etc_mail_vusers.j2 dest=/etc/mail/vusers owner=root group=wheel mode=0644
+
+- name: Set root alias
+  sudo: yes
+  lineinfile: "dest=/etc/mail/aliases backup=yes line='root: daniel' regexp='^root: daniel$' state=present create=True insertafter=EOF"
+  notify:
+      - run newaliases
