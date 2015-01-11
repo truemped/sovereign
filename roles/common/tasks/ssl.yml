@@ -1,14 +1,22 @@
+---
+
 - name: Create SSL certs directory
   file: state=directory path=/etc/ssl/certs
 
 - name: Create SSL private directory
   file: state=directory path=/etc/ssl/private
 
-- name: Copy SSL private key into place
-  copy: src=wildcard_private.key dest=/etc/ssl/private/wildcard_private.key group=wheel owner=root mode=0600
+- name: Copy SSL private keys
+  copy: src={{ item }} dest=/etc/ssl/private/{{ item }} group=wheel owner=root mode=0600
+  with_items:
+    - wildcard_private.key
+    - dkim_private.key
 
-- name: Copy SSL public certificate into place
-  copy: src=wildcard_public_cert.crt dest=/etc/ssl/certs/wildcard_public_cert.crt group=wheel owner=root mode=644
+- name: Copy SSL public certificates
+  copy: src={{ item }} dest=/etc/ssl/certs/{{ item }} group=wheel owner=root mode=644
+  with_items:
+    - wildcard_public_cert.crt
+    - dkim_public.crt
 
 - name: Copy CA combined certificate into place
   copy: src=wildcard_ca.pem dest=/etc/ssl/certs/wildcard_ca.pem group=wheel owner=root mode=644
