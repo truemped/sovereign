@@ -1,0 +1,16 @@
+---
+
+- name: Install spampd
+  openbsd_pkg: name=spampd state=installed
+
+- name: add spampd service to rc.conf.local
+  sudo: yes
+  lineinfile:
+    dest=/etc/rc.conf.local
+    backup=yes
+    line='spampd_enable="YES"'
+    regexp='^spampd_enable="YES"$'
+    state=present
+    insertafter=EOF
+    create=True
+  notify: restart spampd

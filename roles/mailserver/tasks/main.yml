@@ -1,6 +1,8 @@
 - include: opensmtpd.yml tags=opensmtpd
-#- include: postfix.yml tags=postfix
+- include: spampd.yml tags=spampd
 - include: dovecot.yml tags=dovecot
+- include: dkimproxy.yml tags=dkimproxy
+
 #- include: opendkim.yml tags=opendkim
 #- include: dspam.yml tags=dspam
 #- include: solr.yml tags=solr

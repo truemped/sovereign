@@ -1,33 +1,41 @@
-# Zuerst werden Zertifikat und Schluessel festgelegt
+# SSL certificates
 pki foo.my.domain certificate "/etc/ssl/certs/wildcard_public_cert.crt"
 pki foo.my.domain key "/etc/ssl/private/wildcard_private.key"
 
-# Um nur lokale Mails zuzustellen kann der smtpd an localhost lauschen
-#    listen on localhost
-#
-# Um Mails von aussen zu empfangen wir an Port 25 gelauscht und verschluesselte Verbindungen angeboten
-listen on em0 port 25 tls pki foo.my.domain
-# Um den Server als Relay nutzen zu koennen muessen sich Benutzer per smtps verbinden und anmelden
+# receive mails from outside
+listen on em0 port 25 tls pki foo.my.domain tag incoming
+
+# using this server as relay required authenticated users
 listen on em0 smtps pki foo.my.domain auth
+
+# mails coming from spampd
+listen on lo0 port 10026 tag after_spampd
+
+# mails coming from the dkimproxy
+listen on lo0 port 10028 tag DKIM
+
+bounce-warn 4h, 1d, 2d
  
-# Tabellen setzen
-# Die System-Alias-Tabelle
+# tables
+# system-alias-table
 table aliases file:/etc/mail/aliases
-# Tabelle der Domains fuer welche Mails angenommen werden sollen
+# domain table
 table domains file:/etc/mail/domains
-# Tabelle der virtuellen Nutzer. Mapping von virtuellen Mailadressen auf Systembenutzer
+# table for virtual users
 table vusers  file:/etc/mail/vusers
  
-# Alles was lokal ist wird direkt zugestellt
+# locally deliver everything
 accept from local for local alias <aliases> deliver to lmtp "/var/dovecot/lmtp"
 accept from local for local deliver to lmtp "/var/dovecot/lmtp"
  
-# Empfangene Mails in die Maildirverzeichnisse der Benutzer zustellen:
-# Im einfachsten Fall koennen einfach alle Mails an die Benutzer des Systems angenommen und zugestellt werden.
-#    accept from any for domain foo.my.domain deliver to maildir
+# incoming mails are forwarded to spampd
+accept tagged incoming from any for domain <domains> relay via smtp://localhost:10025 hostname localhost source 127.0.0.1
  
-# Alle Mails von aussen akzeptieren wenn sie zu den akzeptierten domains und virtuellen usern gehoert
-accept from any for domain <domains> virtual <vusers> deliver to lmtp "/var/dovecot/lmtp"
+# everything processed by spampd can be delivered
+accept tagged after_spampd from any for domain <domains> virtual <vusers> deliver to lmtp "/var/dovecot/lmtp"
  
-# Angemeldete Benutzer (die sich per smtps gegen ihre lokalen Benutzerdaten authentifizieren) duerfen Relay nutzen
-accept for any relay
+# mails from dkimproxy are forwarded to the relays
+accept tagged DKIM for any relay
+
+# relay mails through dkimproxy
+accept for any relay via smtp://localhost:10027

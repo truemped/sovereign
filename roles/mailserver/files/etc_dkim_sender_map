@@ -1,0 +1,1 @@
+foo.mydomain dkim(s=fancydkimselector,d=foo.mydomain,c=relaxed,a=rsa-sha256,key=/etc/ssl/private/dkim_private.key)

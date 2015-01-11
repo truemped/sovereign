@@ -17,3 +17,9 @@
 - name: Rerun loginconf database
   sudo: yes
   action: shell cap_mkdb /etc/login.conf
+
+- name: restart spampd
+  service: name=spampd state=restarted
+
+- name: restart dimproxy
+  service: name=dkimproxy_out state=restarted
