@@ -10,6 +10,7 @@
     - screen-4.0.3p4-shm
     - vim--no_x11
     - zsh
+    - lsof
 
 - name: Disable X11 for ports
   sudo: yes
