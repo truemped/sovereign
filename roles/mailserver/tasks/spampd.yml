@@ -14,3 +14,14 @@
     insertafter=EOF
     create=True
   notify: restart spampd
+
+- name: enable daily cron for updating spam db
+  sudo: yes
+  lineinfile:
+    dest=/var/cron/tabs/root
+    backup=yes
+    line='20      6       *       *       *       /usr/local/bin/sa-update && /etc/rc.d/spampd restart'
+    regexp='^20      6       *       *       *       /usr/local/bin/sa-update && /etc/rc.d/spampd restart$'
+    state=present
+    insertafter=EOF
+    create=True
