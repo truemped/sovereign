@@ -7,16 +7,15 @@
 - name: Install dkimproxy installed
   sudo: yes
   action: shell cd /usr/ports/mail/dkimproxy && make install clean
-  when: ls_dkimproxyout.stdout.find('dkimproxy.out') != -1
-  notify: restart dimproxy
+  when: ls_dkimproxyout.stdout.find('dkimproxy.out') == -1
 
 - name: dkimproxy configuration
   copy: src=etc_dkimproxy_out.conf dest=/etc/dkimproxy_out.conf owner=root group=wheel mode=0644
-  notify: restart dimproxy
+  notify: restart dkimproxy
 
 - name: dkimproxy sender map configuration
   copy: src=etc_dkim_sender_map dest=/etc/dkim_sender_map owner=root group=wheel mode=0644
-  notify: restart dimproxy
+  notify: restart dkimproxy
 
 - name: add dkimproxy service to rc.conf.local
   sudo: yes
@@ -28,4 +27,4 @@
     state=present
     insertafter=EOF
     create=True
-  notify: restart dimproxy
+  notify: restart dkimproxy
