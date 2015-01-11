@@ -6,13 +6,13 @@
   notify:
     - restart ntp
 
-- name: add service to rc.conf.local
+- name: add ntp service to rc.conf.local
   sudo: yes
   lineinfile:
     dest=/etc/rc.conf.local
     backup=yes
-    line="ntpd_flags="-s""
-    regexp='^'
+    line='ntpd_flags="-s"'
+    regexp='^ntpd_flags="-s"$'
     state=present
     insertafter=EOF
     create=True
