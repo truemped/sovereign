@@ -1,15 +1,15 @@
 # SSL certificates
-pki foo.my.domain certificate "/etc/ssl/certs/wildcard_public_cert.crt"
-pki foo.my.domain key "/etc/ssl/private/wildcard_private.key"
+pki {{ mail_server_hostname }} certificate "/etc/ssl/certs/wildcard_public_cert.crt"
+pki {{ mail_server_hostname }} key "/etc/ssl/private/wildcard_private.key"
 
 # receive mails from outside
-listen on em0 port 25 tls pki foo.my.domain tag incoming
+listen on em0 port 25 tls pki {{ mail_server_hostname }} tag INCOMING
 
 # using this server as relay required authenticated users
-listen on em0 smtps pki foo.my.domain auth
+listen on em0 smtps pki {{ mail_server_hostname }} auth
 
 # mails coming from spampd
-listen on lo0 port 10026 tag after_spampd
+listen on lo0 port 10026 tag AFTER_SPAMPD
 
 # mails coming from the dkimproxy
 listen on lo0 port 10028 tag DKIM
@@ -29,10 +29,10 @@ accept from local for local alias <aliases> deliver to lmtp "/var/dovecot/lmtp"
 accept from local for local deliver to lmtp "/var/dovecot/lmtp"
  
 # incoming mails are forwarded to spampd
-accept tagged incoming from any for domain <domains> relay via smtp://localhost:10025 hostname localhost source 127.0.0.1
+accept tagged INCOMING from any for domain <domains> relay via smtp://localhost:10025 hostname localhost source 127.0.0.1
  
 # everything processed by spampd can be delivered
-accept tagged after_spampd from any for domain <domains> virtual <vusers> deliver to lmtp "/var/dovecot/lmtp"
+accept tagged AFTER_SPAMPD from any for domain <domains> virtual <vusers> deliver to lmtp "/var/dovecot/lmtp"
  
 # mails from dkimproxy are forwarded to the relays
 accept tagged DKIM for any relay

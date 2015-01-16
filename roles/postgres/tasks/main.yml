@@ -1,0 +1,14 @@
+- name: Install postgresql
+  openbsd_pkg: name={{ item }} state=installed
+  with_items:
+      - postgresql-server-{{ postgres_version }}
+      - py-psycopg2-2.5.2p0
+
+- name: check if postgres initialized
+  shell: ls -al /var/postgresql
+  register: ls_postgresqlconf
+
+- name: setup postgres
+  shell: su _postgresql -c 'initdb -D /var/postgresql/data -U postgres -E UNICODE'
+  when: ls_postgresqlconf.stdout.find('data') == -1
+  notify: restart postgres

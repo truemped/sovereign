@@ -1,1 +1,3 @@
-me@my.domain daniel
+{% for vuser in mail_virtual_users %}
+{{ vuser['account'] }}{{ vuser['domain'] }} {{ vuser['localuser'] }}
+{% endfor %}

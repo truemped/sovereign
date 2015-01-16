@@ -8,8 +8,8 @@
   lineinfile:
     dest=/etc/rc.conf.local
     backup=yes
-    line='spampd_enable="YES"'
-    regexp='^spampd_enable="YES"$'
+    line='spampd_flags="--tagall --relayport=10026"'
+    regexp='^spampd_flags="--tagall --relayport=10026"$'
     state=present
     insertafter=EOF
     create=True
