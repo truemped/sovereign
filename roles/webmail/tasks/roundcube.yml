@@ -14,19 +14,9 @@
                    priv=ALL
   notify: setup roundcube database
 
-# - name: Install Roundcube
-#   apt: pkg={{ item }} state=latest
-#   with_items:
-#     - roundcube
-#    - roundcube-pgsql
-#    - roundcube-plugins
-# 
-# - name: Configure Roundcube database
-# template: src={{ item.src }} dest={{ item.dest }} group={{ item.group }} mode={{ item.mode }} owner=root force=yes
-# with_items:
-# - { src: 'etc_dbconfig-common_roundcube.conf.j2', dest: '/etc/dbconfig-common/roundcube.conf', group: 'root',     mode: 600 }
-# - { src: 'etc_roundcube_debian-db.php.j2',        dest: '/etc/roundcube/debian-db.php',        group: 'www-data', mode: 640 }
-# notify: set roundcube password
+- name: roundcube configuration
+  template: src=roundcube_config.inc.php dest=/var/www/roundcubemail/config/config.inc.php owner=root group=daemon group=0644
+  notify: restart php-fpm
 
 # - name: Download carddav plugin release
 # get_url:
