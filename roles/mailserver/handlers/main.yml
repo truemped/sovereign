@@ -25,4 +25,4 @@
   service: name=dkimproxy_out state=restarted
 
 - name: restart php-fpm
-  service: name=php_fpm start=restarted
+  service: name=php_fpm state=restarted

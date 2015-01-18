@@ -15,8 +15,15 @@
   notify: setup roundcube database
 
 - name: roundcube configuration
-  template: src=roundcube_config.inc.php dest=/var/www/roundcubemail/config/config.inc.php owner=root group=daemon group=0644
+  template: src=roundcube_config.inc.php dest=/var/www/roundcubemail/config/config.inc.php owner=root group=daemon mode=0644
   notify: restart php-fpm
+
+- name: roundcube nginx configuration
+  copy: src=etc_nginx_roundcube.conf dest=/etc/nginx/sites-available/roundcube.conf owner=root group=wheel mode=0644
+
+- name: enable roundcube nginx
+  file: src=/etc/nginx/sites-available/roundcube.conf dest=/etc/nginx/sites-enabled/roundcube.conf owner=root group=wheel state=link
+  notify: reload nginx
 
 # - name: Download carddav plugin release
 # get_url:
