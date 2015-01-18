@@ -1,0 +1,31 @@
+---
+
+- name: set nginx startup flags
+  sudo: yes
+  lineinfile:
+    dest=/etc/rc.conf.local
+    backup=yes
+    line='nginx_flags=""'
+    regexp='^nginx_flags=""$'
+    state=present
+    insertafter=EOF
+    create=True
+
+- name: ensure nginx directories
+  file: state=directory path=/etc/nginx/{{ item }}
+  with_items:
+    - sites-available
+    - sites-enabled
+
+- name: default nginx config
+  copy: src=nginx.conf dest=/etc/nginx/nginx.conf owner=root group=wheel mode=0644
+  notify:
+      - restart nginx
+
+- name: Ensure nginx resource limits
+  sudo: yes
+  lineinfile: "dest=/etc/login.conf backup=yes line='nginx: :openfiles-cur=512: :openfiles-max=2048: :tc=daemon:' regexp='^nginx: :openfiles-cur=512: :openfiles-max=2048: :tc=daemon:$' state=present create=True insertafter=EOF"
+  notify:
+      - Rerun loginconf database
+      - restart nginx
+
