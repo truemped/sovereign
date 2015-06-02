@@ -1,12 +1,14 @@
 ---
 
+- name: install nginx
+  openbsd_pkg: name=nginx-1.7.10 state=installed
+
 - name: set nginx startup flags
   sudo: yes
   lineinfile:
     dest=/etc/rc.conf.local
     backup=yes
     line='nginx_flags=""'
-    regexp='^nginx_flags=""$'
     state=present
     insertafter=EOF
     create=True
@@ -24,7 +26,7 @@
 
 - name: Ensure nginx resource limits
   sudo: yes
-  lineinfile: "dest=/etc/login.conf backup=yes line='nginx: :openfiles-cur=512: :openfiles-max=2048: :tc=daemon:' regexp='^nginx: :openfiles-cur=512: :openfiles-max=2048: :tc=daemon:$' state=present create=True insertafter=EOF"
+  lineinfile: "dest=/etc/login.conf backup=yes line='nginx: :openfiles-cur=512: :openfiles-max=2048: :tc=daemon:' state=present create=True insertafter=EOF"
   notify:
       - Rerun loginconf database
       - restart nginx

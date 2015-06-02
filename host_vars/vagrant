@@ -1,0 +1,2 @@
+ansible_python_interpreter: /usr/local/bin/python
+pkg_scripts: postgresql spampd dkimproxy_out dovecot php_fpm

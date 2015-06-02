@@ -5,8 +5,8 @@
 ###############################################################################
 
 # common
-domain: TODO.com
-main_user_name: TODO
+domain: d9i.de
+main_user_name: daniel
 encfs_password: TODO
 
 # database
@@ -25,19 +25,12 @@ irc_timezone: TODO      #Example: "America/New_York"
 # mailserver
 mail_db_password: TODO
 mail_virtual_domains:
-  - name: "{{ domain }}"
-    pk_id: 1
-#  - name: TODO.com
-#    pk_id: 2
+  - "{{ domain }}"
+#  - TODO.com
 mail_virtual_users:
-  - account: "{{ main_user_name }}"
-    domain: "{{ domain }}"
-    password_hash: TODO
-    domain_pk_id: 1
-#  - account: "{{ TODO }}"
-#    domain: "{{ domain }}"
-#    password_hash: TODO
-#    domain_pk_id: 2
+  - account: "me"
+    domain: "@{{ domain }}"
+    localuser: "{{ main_user_name }}"
 mail_virtual_aliases:
   - source: "root@{{ domain }}"
     destination: "{{ admin_email }}"

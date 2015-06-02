@@ -2,7 +2,7 @@
 # This is the top-level playbook that defines our entire infrastructure.
 
 - hosts: all
-  user: deploy
+  user: daniel
   sudo: True
   gather_facts: True
   vars_files:
@@ -11,16 +11,19 @@
 
   roles:
     - common
+    - nginx
+    - php
+    - postgres
     - mailserver
     - webmail
-    - blog
-    - ircbouncer
-    - xmpp
     - owncloud
-    - vpn
-    - tarsnap
-    - news
-    - git
-    - newebe
-    - readlater
-    - monitoring  # Monitoring role should be last. See roles/monitoring/README.md
+
+      #    - blog
+      #    - ircbouncer
+      #    - xmpp
+      #    - vpn
+      #    - tarsnap
+      #    - news
+      #    - git
+      #    - readlater
+      #    - monitoring  # Monitoring role should be last. See roles/monitoring/README.md

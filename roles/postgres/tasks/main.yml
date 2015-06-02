@@ -9,6 +9,7 @@
   register: ls_postgresqlconf
 
 - name: setup postgres
-  shell: su _postgresql -c 'initdb -D /var/postgresql/data -U {{ db_admin_username }} -E UNICODE'
+  shell: su _postgresql -c 'initdb -D /var/postgresql/data -U {{ db_admin_username }} -E "UTF-8" --no-locale'
   when: ls_postgresqlconf.stdout.find('data') == -1
-  notify: restart postgres
+  notify:
+      - restart postgres

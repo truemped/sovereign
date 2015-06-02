@@ -12,7 +12,6 @@
     dest=/etc/rc.conf.local
     backup=yes
     line='ntpd_flags="-s"'
-    regexp='^ntpd_flags="-s"$'
     state=present
     insertafter=EOF
     create=True

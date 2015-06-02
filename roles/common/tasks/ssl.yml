@@ -27,3 +27,6 @@
 
 - name: Set permissions on combined public cert
   file: name=/etc/ssl/certs/wildcard_combined.pem mode=644
+
+- name: Generate DH Params
+  command: /usr/bin/openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048 creates=/etc/ssl/certs/dhparam.pem

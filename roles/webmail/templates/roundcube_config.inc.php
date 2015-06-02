@@ -22,7 +22,7 @@ $config['smtp_log'] = false;
 // %d - domain (http hostname $_SERVER['HTTP_HOST'] without the first part)
 // %s - domain name after the '@' from e-mail address provided at login screen
 // For example %n = mail.domain.tld, %t = domain.tld
-$config['default_host'] = 'tls://{{ webmail_domain }}';
+$config['default_host'] = 'tls://192.168.2.107';
 
 // TCP port used for IMAP connections
 $config['default_port'] = 143;

@@ -6,7 +6,7 @@
 
 - name: Ensure dovecot resource limits
   sudo: yes
-  lineinfile: "dest=/etc/login.conf backup=yes line='dovecot: :openfiles-cur=512: :openfiles-max=2048: :tc=daemon:' regexp='^dovecot: :openfiles-cur=512: :openfiles-max=2048: :tc=daemon:$' state=present create=True insertafter=EOF"
+  lineinfile: "dest=/etc/login.conf backup=yes line='dovecot: :openfiles-cur=512: :openfiles-max=2048: :tc=daemon:' state=present create=True insertafter=EOF"
   notify:
       - Rerun loginconf database
 

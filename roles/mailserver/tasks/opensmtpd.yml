@@ -16,7 +16,7 @@
 
 - name: Set root alias
   sudo: yes
-  lineinfile: "dest=/etc/mail/aliases backup=yes line='root: daniel' regexp='^root: daniel$' state=present create=True insertafter=EOF"
+  lineinfile: "dest=/etc/mail/aliases backup=yes line='root: daniel' state=present create=True insertafter=EOF"
   notify:
       - run newaliases
   notify: restart smtpd

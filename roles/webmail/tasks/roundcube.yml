@@ -1,7 +1,5 @@
 - name: Install roundcube
-  openbsd_pkg: name={{ item }} state=installed
-  with_items:
-      - roundcubemail
+  openbsd_pkg: name=roundcubemail state=installed
 
 - postgresql_db: name={{ webmail_db_database }}
                  encoding='UTF-8'
@@ -19,7 +17,8 @@
   notify: restart php-fpm
 
 - name: roundcube nginx configuration
-  copy: src=etc_nginx_roundcube.conf dest=/etc/nginx/sites-available/roundcube.conf owner=root group=wheel mode=0644
+  template: src=etc_nginx_roundcube.conf.j2 dest=/etc/nginx/sites-available/roundcube.conf owner=root group=wheel mode=0644
+  notify: reload nginx
 
 - name: enable roundcube nginx
   file: src=/etc/nginx/sites-available/roundcube.conf dest=/etc/nginx/sites-enabled/roundcube.conf owner=root group=wheel state=link

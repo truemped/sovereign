@@ -3,28 +3,33 @@
 - name: Install php
   openbsd_pkg: name={{ item }} state=installed
   with_items:
-      - php-{{ php_version }}p0
+      - php-{{ php_version }}
       - php-bz2-{{ php_version }}
+      - php-curl-{{ php_version }}
+      - php-fpm-{{ php_version }}
       - php-gd-{{ php_version }}
       - php-gmp-{{ php_version }}
+      - php-intl-{{ php_version }}
       - php-mcrypt-{{ php_version }}
-      - php-pgsql-{{ php_version }}
-      - php-zip-{{ php_version }}
-      - php-fpm-{{ php_version }}
       - php-pdo_pgsql-{{ php_version }}
+      - php-pgsql-{{ php_version }}
       - php-pspell-{{ php_version }}
+      - php-xmlrpc-{{ php_version }}
+      - php-zip-{{ php_version }}
+
+- name: Enable PHP modules
+  file: src=/etc/php-5.6.sample/{{ item }}.ini dest=/etc/php-5.6/{{ item }}.ini owner=root group=wheel state=link
+  with_items:
+      - bz2
+      - curl
+      - gd
+      - intl
+      - mcrypt
+      - pdo_pgsql
+      - pgsql
+      - pspell
+      - xmlrpc
+      - zip
 
 - name: upload php fpm config
   copy: src=etc_php-fpm.conf dest=/etc/php-fpm.conf owner=root group=wheel mode=0644
-
-- name: add php_fpm service to rc.conf.local
-  sudo: yes
-  lineinfile:
-    dest=/etc/rc.conf.local
-    backup=yes
-    line='php_fpm_enable="YES"'
-    regexp='^php_fpm_enable="YES"$'
-    state=present
-    insertafter=EOF
-    create=True
-  notify: restart php_fpm

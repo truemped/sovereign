@@ -4,6 +4,12 @@
 # This is a reference of all the variables.
 ###############################################################################
 
+# php versions
+php_version: 5.6.5
+
+postgres_version: 9.4.1p1
+
+
 # # common
 # domain: (required)
 # main_user_name: (required)
@@ -27,6 +33,34 @@ ntp_servers:
   # - 2.north-america.pool.ntp.org
   # - 3.north-america.pool.ntp.org
 
+ 
+# database
+db_admin_username: 'postgres'
+# db_admin_password: (required)
+
+
+# mailserver
+mail_server_hostname: "mail.{{ domain }}"
+mail_server_autoconfig_hostname: "autoconfig.{{ domain }}"
+# mail_virtual_domains: (required)
+# mail_virtual_users: (required)
+# mail_virtual_aliases: (required)
+
+
+# webmail
+webmail_domain: "mail.{{ domain }}"
+webmail_db_username: "roundcube"
+# webmail_db_password: (required)
+webmail_db_database: "roundcube"
+webmail_db_host: "127.0.0.1:5432"
+carddav_version: "1.0.0"
+
+
+
+
+
+
+
 # collectd
 collectd_version: 5.4.1
 collectd_librato_version: 0.0.10
@@ -36,10 +70,6 @@ collectd_librato_api_token: "" # (optional)
 # google authenticator
 google_auth_version: 1.0
 
-# database
-db_admin_username: 'postgres'
-# db_admin_password: (required)
-
 # ircbouncer
 znc_version: 1.4
 # irc_nick: (required)
@@ -48,16 +78,6 @@ znc_version: 1.4
 # irc_quitmsg: (required)
 # irc_password_hash: (required)
 # irc_password_salt: (required)
-
-# mailserver
-mail_server_hostname: "mail.{{ domain }}"
-mail_server_autoconfig_hostname: "autoconfig.{{ domain }}"
-mail_db_username: mailuser
-# mail_db_password: (required)
-mail_db_database: mailserver
-# mail_virtual_domains: (required)
-# mail_virtual_users: (required)
-# mail_virtual_aliases: (required)
 
 # z-push
 zpush_version: 2.1.1-1788
@@ -90,13 +110,6 @@ openvpn_server: "{{ domain }}"
 openvpn_port: "1194"
 openvpn_protocol: "udp"
 # openvpn_clients: (required)
-
-# webmail
-webmail_domain: "mail.{{ domain }}"
-webmail_db_username: "roundcube"
-# webmail_db_password: (required)
-webmail_db_database: "roundcube"
-carddav_version: "1.0.0"
 
 # xmpp
 prosody_admin: "{{ admin_email }}"

@@ -1,13 +1,12 @@
 ---
 
 - name: Check dkimproxy existance
-  shell: ls /usr/local/bin/dkimproxy.out
+  shell: ls /usr/local/bin/
   register: ls_dkimproxyout
 
-- name: Install dkimproxy installed
+- name: Ensure dkimproxy installed
   sudo: yes
-  action: shell cd /usr/ports/mail/dkimproxy && make install clean
-  when: ls_dkimproxyout.stdout.find('dkimproxy.out') == -1
+  openbsd_pkg: name=dkimproxy-1.4.1p0 state=installed
 
 - name: dkimproxy configuration
   copy: src=etc_dkimproxy_out.conf dest=/etc/dkimproxy_out.conf owner=root group=wheel mode=0644
@@ -23,7 +22,6 @@
     dest=/etc/rc.conf.local
     backup=yes
     line='dkimproxy_out_enable="YES"'
-    regexp='^dkimproxy_out_enable="YES"$'
     state=present
     insertafter=EOF
     create=True

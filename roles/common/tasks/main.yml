@@ -16,6 +16,18 @@
   sudo: yes
   copy: src=etc_make.conf dest=/etc/make.conf owner=root group=wheel mode=0644
 
+- name: update rc.conf.local pkg_scripts
+  sudo: yes
+  lineinfile:
+    dest=/etc/rc.conf.local
+    backup=yes
+    line='pkg_scripts="{{ pkg_scripts }}"'
+    regexp='^pkg_scripts=".*"$'
+    state=present
+    insertafter=EOF
+    create=True
+
+
 - include: ntp.yml tags=ntp
 - include: ssl.yml tags=ssl
 
