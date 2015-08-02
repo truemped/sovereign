@@ -39,26 +39,11 @@ Vagrant.configure("2") do |config|
   end
 
   #
-  # Debian 7 64-bit (officially supported)
+  # Debian 8 64-bit (officially supported)
   #
 
   config.vm.define "debian", primary: true do |debian|
-    debian.vm.box = "box-cutter/debian78"
+    debian.vm.box = "box-cutter/debian81"
   end
 
-  #
-  # Ubuntu 12.04 64-bit
-  #
-
-  config.vm.define "precise", autostart: false do |precise|
-    precise.vm.box = "box-cutter/ubuntu1204"
-  end
-
-  #
-  # Ubuntu 14.04 64-bit
-  #
-
-  config.vm.define "trusty", autostart: false do |trusty|
-    trusty.vm.box = "box-cutter/ubuntu1404"
-  end
 end
