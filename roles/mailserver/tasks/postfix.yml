@@ -8,6 +8,7 @@
     - postgrey
     - python-psycopg2
     - sasl2-bin
+    - postfix-policyd-spf-python
   tags:
     - dependencies
 
@@ -49,6 +50,10 @@
     - pgsql-virtual-alias-maps.cf
     - pgsql-virtual-mailbox-domains.cf
     - pgsql-virtual-mailbox-maps.cf
+  notify: restart postfix
+
+- name: Copy spf config
+  template: src=etc_postfix-policyd-spf-python_policyd-spf.conf.j2 dest=/etc/postfix-policyd-spf-python/policyd-spf.conf
   notify: restart postfix
 
 - name: Set firewall rules for postfix
