@@ -25,6 +25,11 @@ ntp_servers:
   - 1.pool.ntp.org
   - 2.pool.ntp.org
   - 3.pool.ntp.org
+  - 0.debian.pool.ntp.org iburst
+  - 1.debian.pool.ntp.org iburst
+  - 2.debian.pool.ntp.org iburst
+  - 3.debian.pool.ntp.org iburst
+
   # use servers tailored to the server location
   # See http://www.pool.ntp.org/en/use.html
   # - 0.north-america.pool.ntp.org

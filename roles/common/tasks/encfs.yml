@@ -10,6 +10,9 @@
 - name: Create encrypted directory
   file: state=directory path=/encrypted
 
+- name: Add fuse group
+  group: name=fuse state=present
+
 - name: Add mail user to fuse group
   user: name=mail append=yes groups=fuse
 
