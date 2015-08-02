@@ -1,0 +1,7 @@
+
+- name: Install Postgres 9.4 on Debian jessie
+  apt: pkg=postgresql-9.4 state=present
+  when: ansible_distribution_release == 'jessie'
+  tags:
+    - dependencies
+
